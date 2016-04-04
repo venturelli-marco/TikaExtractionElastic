@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+  <Properties>
+    <Property name="filename">logs/alert</Property>
+  </Properties>
+
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d [%p] %C{1.} [%t] %m%n"/>
+    </Console>
+	<Console name="ConsoleERR" target="SYSTEM_ERR">
+      <PatternLayout pattern="[%p] %m%n"/>
+   </Console>
+<!--
+	 <File name="File" fileName="${filename}.log">
+      <PatternLayout pattern="%d %p %C{1.} [%t] %m%n" />
+    </File>
+-->
+	<JDBC name="databaseAppender" tableName="logging">
+		<ConnectionFactory class="utils.ConnectionFactory" method="getDatabaseConnection" />
+		<Column name="EVENT_DATE" isEventTimestamp="true" />
+		<Column name="LEVEL" pattern="%level" />
+		<Column name="LOGGER" pattern="%logger" />
+		<Column name="MSG" pattern="%message" />
+		
+	</JDBC>
+	<RollingFile name="RollFile" 
+					fileName="${filename}.log" 
+					filePattern="${filename}-$${date:yyyy-MM}/%d{MM-dd-yyyy}-%i.log.gz"
+					append="true">
+      <PatternLayout pattern="%d [%p] %C{1.} [%t] - %m%n" />
+      <SizeBasedTriggeringPolicy size="20MB" />
+    </RollingFile>
+
+  </Appenders>
+
+  <Loggers>
+    <Root level="ERROR">
+      <AppenderRef ref="ConsoleERR"/>
+    </Root>
+	<logger name="alert.AlertLogger" level="INFO" additivity="false">
+		<!-- <AppenderRef ref="File"/> -->
+		<AppenderRef ref="databaseAppender"/> 
+		<AppenderRef ref="RollFile"/> 
+    </logger>
+  </Loggers>
+</Configuration>

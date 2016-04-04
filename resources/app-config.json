@@ -1,0 +1,74 @@
+{
+	"keywords": [
+		"confidential",
+		"classified",
+		"secret"
+	],
+	"regexp":{
+		"CF": "[A-Z]{6}[A-Z0-9]{2}[A-Z][A-Z0-9]{2}[A-Z][A-Z0-9]{3}[A-Z]",
+		"mail": "[a-zA-Z0-9\\.\\_\\%\\-]{1,}\\@[a-zA-Z0-9\\.\\-]{1,}\\.[a-zA-Z]{2,4}"
+	},
+	"keywords_prop": "list of keywords to search [mandatory]",
+	"TIKA": {
+		"log-properties-file": "resources/logging.properties",
+		"tika-config-file": "PATH-TO-CONFIG-XML",
+		"disableOCR": "boolean",
+		"recursiveJSON": "boolean",
+		"maxOutputFile": "int byte",
+		"maxEmbeddedFile": "int embedded files",
+		"maxInputRecursiveFile": "int embedded files",
+		"tesseractOCR": {
+			"TessdataPath": "/usr/share/tesseract-ocr/tessdata",
+			"TesseractPath": "/usr/bin",
+			"language": "eng+ita"		
+		}
+	},		
+	"TIKA_prop": "If not given or if error occured during parsing, default values are used [OPTIONAL]",
+	"log4j.configurationFile": "resources/log4j2.xml",
+	"log4j.configurationFile_prop": "[MANDATORY]",
+	"alert-config_prop": "Alert Configuration [OPTIONAL]",
+	"alert-config": {
+		"MODE": ["log4j", "LOG", "DB"],
+		"eg_MODE": ["log4j", "LOG", "DB"],
+		"MODE_prop": "Select Alert mode [MANDATORY]; if nothing leave empty",
+		"LOG": {
+			"append": true,
+			"console": false,
+			"fileName": "logs/testMyLog.log",
+			"level": "INFO",
+			"pattern": "%d [%t] %-5level: %msg%n%throwable",
+			"message": "accept [append, console, filename, level, pattern] default=[false, false, null,INFO, SIMPLE_LAYOUT]"
+		},
+		"DB": {
+			"username": "username",
+			"password": "password",
+			"driverClassName": "com.mysql.jdbc.Driver",
+			"url": "jdbc:mysql://localhost/TIKA_LOGS_DB",
+			"message": "following values are mandatory in case of MODE=DB (previous are shared with log4j DB configurations)",
+			"TableName": "alert_log",
+			"ColumnsName": {
+				"resource_name": "%r",
+				"content_sha": "%s",
+				"keyword": "%k",
+				"message": "%m"
+			},
+			"eg_ColumnsName": {
+				"qualifiers": "r,s,k,i,h,m",
+				"resource_name": "%r",
+				"content_sha": "%s",
+				"keyword": "%k",
+				"match_index": "%i",
+				"host_name": "%h",
+				"message": "%m"
+			}
+		}	
+	},
+	"elasticSearch": {
+		"path_home": "path-to-elastic-data-dir",
+		"clusterName": "test_cluster",
+		"index": "test_index",
+		"type": "test_type", 
+		"message": "path_home mandatory, others are optional (default value are used if missing test_cluster, documents, metadata)"
+	},
+	"elasticSearch_prop": "[MANDATORY]"
+}
